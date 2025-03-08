@@ -1,0 +1,66 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace "com.vaishnavi.photoalbumapp"
+    compileSdk libs.versions.androidCompileSdk.get().toInteger() // Fixed reference
+
+    defaultConfig {
+        applicationId "com.vaishnavi.photoalbumapp"
+        minSdk 23
+        targetSdk libs.versions.androidTargetSdk.get().toInteger() // Fixed reference
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
+}
+
+dependencies {
+    // AndroidX Core Dependencies
+    implementation "androidx.appcompat:appcompat:${libs.versions.appcompat.get()}"
+    implementation "com.google.android.material:material:${libs.versions.material.get()}"
+    implementation "androidx.constraintlayout:constraintlayout:${libs.versions.constraintlayout.get()}"
+    implementation "androidx.activity:activity:${libs.versions.activity.get()}"
+
+    // Retrofit for API calls
+    implementation "com.squareup.retrofit2:retrofit:2.9.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.9.0"
+
+    // Glide for image loading
+    implementation "com.github.bumptech.glide:glide:4.12.0"
+    annotationProcessor "com.github.bumptech.glide:compiler:4.12.0" // If using Kotlin, replace with kapt
+
+    // Paging for infinite scrolling
+    implementation "androidx.paging:paging-runtime:${libs.versions.paging.get()}"
+
+    // Room Database for offline caching
+    implementation "androidx.room:room-runtime:${libs.versions.room.get()}"
+    annotationProcessor "androidx.room:room-compiler:${libs.versions.room.get()}" // If using Kotlin, replace with kapt
+
+    // ViewModel and LiveData
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${libs.versions.lifecycle.get()}"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:${libs.versions.lifecycle.get()}"
+
+    // Unit Testing
+    testImplementation "junit:junit:${libs.versions.junit.get()}"
+    androidTestImplementation "androidx.test.ext:junit:${libs.versions.extJunit.get()}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${libs.versions.espressoCore.get()}"
+}
