@@ -1,10 +1,25 @@
 package com.vaishnavi.photoalbumapp.model;
 
-public class Photo {
-    private String id;
-    private String author;
-    private String download_url;
+import com.google.gson.annotations.SerializedName;
 
+public class Photo {
+    @SerializedName("id")
+    private String id;
+
+    @SerializedName("author")
+    private String author;
+
+    @SerializedName("download_url")
+    private String imageUrl;
+
+    // Constructors
+    public Photo(String id, String author, String imageUrl) {
+        this.id = id;
+        this.author = author;
+        this.imageUrl = imageUrl;
+    }
+
+    // Getters
     public String getId() {
         return id;
     }
@@ -14,6 +29,6 @@ public class Photo {
     }
 
     public String getImageUrl() {
-        return download_url;
+        return imageUrl;
     }
 }
