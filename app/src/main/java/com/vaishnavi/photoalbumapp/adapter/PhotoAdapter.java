@@ -5,12 +5,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.paging.PagingDataAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.vaishnavi.photoalbumapp.R;
 import com.vaishnavi.photoalbumapp.model.Photo;
@@ -21,18 +19,17 @@ public class PhotoAdapter extends PagingDataAdapter<Photo, PhotoAdapter.PhotoVie
         super(DIFF_CALLBACK);
     }
 
-    private static final DiffUtil.ItemCallback<Photo> DIFF_CALLBACK =
-            new DiffUtil.ItemCallback<Photo>() {
-                @Override
-                public boolean areItemsTheSame(@NonNull Photo oldItem, @NonNull Photo newItem) {
-                    return oldItem.getId().equals(newItem.getId());
-                }
+    private static final DiffUtil.ItemCallback<Photo> DIFF_CALLBACK = new DiffUtil.ItemCallback<Photo>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull Photo oldItem, @NonNull Photo newItem) {
+            return oldItem.getId() == newItem.getId();
+        }
 
-                @Override
-                public boolean areContentsTheSame(@NonNull Photo oldItem, @NonNull Photo newItem) {
-                    return oldItem.equals(newItem);
-                }
-            };
+        @Override
+        public boolean areContentsTheSame(@NonNull Photo oldItem, @NonNull Photo newItem) {
+            return oldItem.equals(newItem);
+        }
+    };
 
     @NonNull
     @Override
@@ -45,23 +42,23 @@ public class PhotoAdapter extends PagingDataAdapter<Photo, PhotoAdapter.PhotoVie
     public void onBindViewHolder(@NonNull PhotoViewHolder holder, int position) {
         Photo photo = getItem(position);
         if (photo != null) {
-            holder.bind(photo);
+            holder.textViewAuthor.setText(photo.getAuthor());
+            Glide.with(holder.itemView.getContext())
+                    .load(photo.getImageUrl())
+                    .placeholder(R.drawable.placeholder_foreground)
+                    .error(R.drawable.ic_launcher_foreground)
+                    .into(holder.imageView);
         }
     }
 
-    static class PhotoViewHolder extends RecyclerView.ViewHolder {
+    public static class PhotoViewHolder extends RecyclerView.ViewHolder {
+        TextView textViewAuthor;
         ImageView imageView;
-        TextView textView;
 
         public PhotoViewHolder(@NonNull View itemView) {
             super(itemView);
+            textViewAuthor = itemView.findViewById(R.id.titleTextView);
             imageView = itemView.findViewById(R.id.imageView);
-            textView = itemView.findViewById(R.id.titleTextView);
-        }
-
-        public void bind(Photo photo) {
-            textView.setText(photo.getAuthor());
-            Glide.with(itemView.getContext()).load(photo.getImageUrl()).into(imageView);
         }
     }
 }

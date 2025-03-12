@@ -1,34 +1,44 @@
 package com.vaishnavi.photoalbumapp.model;
 
+import androidx.room.Ignore;
+
 import com.google.gson.annotations.SerializedName;
 
-public class Photo {
-    @SerializedName("id")
-    private String id;
+import java.util.Objects;
 
-    @SerializedName("author")
-    private String author;
+public class Photo {
+    private int id;
 
     @SerializedName("download_url")
     private String imageUrl;
 
-    // Constructors
-    public Photo(String id, String author, String imageUrl) {
+    private String author;
+
+    public Photo(int id, String author, String imageUrl) {
         this.id = id;
-        this.author = author;
         this.imageUrl = imageUrl;
+        this.author = author;
     }
 
-    // Getters
-    public String getId() {
+    public int getId() {
         return id;
-    }
-
-    public String getAuthor() {
-        return author;
     }
 
     public String getImageUrl() {
         return imageUrl;
     }
+
+    public String getAuthor() {
+        return author;
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Photo photo = (Photo) obj;
+        return id == photo.id &&
+                Objects.equals(imageUrl, photo.imageUrl) &&
+                Objects.equals(author, photo.author);
+    }
+
 }

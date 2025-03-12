@@ -5,16 +5,39 @@
     android:orientation="vertical"
     android:padding="8dp">
 
+    <!-- Image View for Photo -->
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/photo_image" />
 
-    <TextView
-        android:id="@+id/titleTextView"
+    <!-- Bottom Layout for ID and Author Name -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:padding="4dp" />
+        android:orientation="horizontal"
+        android:padding="4dp"
+        android:gravity="bottom">
+
+        <!-- ID TextView (Left) -->
+        <TextView
+            android:id="@+id/idTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_weight="1"/>
+
+        <!-- Author Name TextView (Right) -->
+        <TextView
+            android:id="@+id/titleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            android:textStyle="bold"/>
+    </LinearLayout>
 </LinearLayout>

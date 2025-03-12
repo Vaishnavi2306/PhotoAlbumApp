@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">PhotoAlbumApp</string>
+    <string name="photo_image">Photo Image</string>
 </resources>
