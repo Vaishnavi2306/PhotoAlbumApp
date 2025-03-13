@@ -1,25 +1,33 @@
 package com.vaishnavi.photoalbumapp.repository;
 
-import android.content.Context;
-import com.vaishnavi.photoalbumapp.database.AppDatabase;
+import androidx.paging.Pager;
+import androidx.paging.PagingConfig;
+import androidx.paging.PagingLiveData;
+import androidx.lifecycle.LiveData;
+import androidx.paging.PagingData;
 import com.vaishnavi.photoalbumapp.database.PhotoDao;
-import com.vaishnavi.photoalbumapp.network.ApiService;
-import com.vaishnavi.photoalbumapp.network.RetrofitClient;
+import com.vaishnavi.photoalbumapp.model.PhotoEntity;
 
 public class PhotoRepository {
-    private final ApiService apiService;
     private final PhotoDao photoDao;
 
-    public PhotoRepository(Context context) {
-        this.apiService = RetrofitClient.getInstance(context).create(ApiService.class);
-        this.photoDao = AppDatabase.getInstance(context).photoDao();
+    public PhotoRepository(PhotoDao photoDao) {
+        this.photoDao = photoDao;
     }
 
-    public ApiService getApiService() {
-        return apiService;
+    public LiveData<PagingData<PhotoEntity>> getPhotos() {
+        Pager<Integer, PhotoEntity> pager = new Pager<>(
+                new PagingConfig(20, 5, false),
+                () -> photoDao.getAllPhotosPagingSource()
+        );
+        return PagingLiveData.getLiveData(pager);
     }
 
-    public PhotoDao getPhotoDao() {
-        return photoDao;
+    public LiveData<PagingData<PhotoEntity>> searchPhotos(String query) {
+        Pager<Integer, PhotoEntity> pager = new Pager<>(
+                new PagingConfig(20),
+                () -> photoDao.searchPhotosPagingSource(query)
+        );
+        return PagingLiveData.getLiveData(pager);
     }
 }

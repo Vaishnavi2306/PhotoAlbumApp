@@ -4,13 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "photo_table")  // ✅ Ensure this matches DAO query
+@Entity(tableName = "photo_table")
 public class PhotoEntity {
     @PrimaryKey(autoGenerate = false)
     @NonNull
     private int id;
     private String author;
-    private String imageUrl;  // ✅ Renamed from "url" to "imageUrl" to avoid confusion
+    private String imageUrl;
 
     public PhotoEntity(int id, String author, String imageUrl) {
         this.id = id;
@@ -26,7 +26,7 @@ public class PhotoEntity {
         return author;
     }
 
-    public String getImageUrl() {  // ✅ Ensure this matches Glide
+    public String getImageUrl() {
         return imageUrl;
     }
 }

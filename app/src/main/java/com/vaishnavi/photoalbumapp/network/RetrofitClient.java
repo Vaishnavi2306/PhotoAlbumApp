@@ -15,11 +15,12 @@ public class RetrofitClient {
     public static Retrofit getInstance(Context context) {
         if (retrofit == null) {
             File httpCacheDirectory = new File(context.getCacheDir(), "responses");
-            Cache cache = new Cache(httpCacheDirectory, 10 * 1024 * 1024); // 10MB cache
+            Cache cache = new Cache(httpCacheDirectory, 50 * 1024 * 1024); // 10MB cache
 
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
             logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
+                //OkHttpClient with Interceptor
             OkHttpClient okHttpClient = new OkHttpClient.Builder()
                     .cache(cache)
                     .addInterceptor(logging)

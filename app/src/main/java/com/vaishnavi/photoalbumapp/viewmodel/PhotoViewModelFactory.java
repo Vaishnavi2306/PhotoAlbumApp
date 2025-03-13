@@ -2,13 +2,12 @@ package com.vaishnavi.photoalbumapp.viewmodel;
 
 import android.app.Application;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-
-import com.vaishnavi.photoalbumapp.network.ApiService;
 import com.vaishnavi.photoalbumapp.database.PhotoDao;
+import com.vaishnavi.photoalbumapp.network.ApiService;
 
-@SuppressWarnings("unchecked")
 public class PhotoViewModelFactory implements ViewModelProvider.Factory {
     private final Application application;
     private final ApiService apiService;
@@ -20,6 +19,7 @@ public class PhotoViewModelFactory implements ViewModelProvider.Factory {
         this.photoDao = photoDao;
     }
 
+    @NonNull
     @Override
     public <T extends ViewModel> T create(Class<T> modelClass) {
         if (modelClass.isAssignableFrom(PhotoViewModel.class)) {

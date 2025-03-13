@@ -10,46 +10,62 @@ import com.vaishnavi.photoalbumapp.model.PhotoEntity;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-
 import kotlin.coroutines.Continuation;
 
 public class PhotoPagingSource extends PagingSource<Integer, Photo> {
     private final ApiService apiService;
-    private final ExecutorService executor;
     private final PhotoDao photoDao;
+    private final String searchQuery;  // Search Query field
 
-    public PhotoPagingSource(ApiService apiService, PhotoDao photoDao) {
+    // **Updated constructor** to allow `searchQuery` as optional
+    public PhotoPagingSource(ApiService apiService, PhotoDao photoDao, String searchQuery) {
         this.apiService = apiService;
         this.photoDao = photoDao;
-        this.executor = Executors.newSingleThreadExecutor();
+        this.searchQuery = searchQuery != null ? searchQuery.toLowerCase() : null; // Case insensitive
     }
 
     @NonNull
     @Override
-    public Object load(
+    public LoadResult<Integer, Photo> load(
             @NonNull LoadParams<Integer> params,
             @NonNull Continuation<? super LoadResult<Integer, Photo>> continuation
     ) {
         int page = params.getKey() != null ? params.getKey() : 1;
+        int pageSize = 20;
 
         try {
-            Future<LoadResult<Integer, Photo>> future = executor.submit(() -> {
+            Future<LoadResult<Integer, Photo>> future = Executors.newSingleThreadExecutor().submit(() -> {
+                // ✅ **If there's a search query, fetch from the database**
+                if (searchQuery != null && !searchQuery.isEmpty()) {
+                    List<Photo> filteredPhotos = new ArrayList<>();
+                    List<PhotoEntity> photoEntities;
+                    try {
+                        photoEntities = photoDao.searchPhotos(searchQuery); // Safe DB query
+                    } catch (Exception e) {
+                        Log.e("PhotoPagingSource", "Database search failed: " + e.getMessage(), e);
+                        return new LoadResult.Error<>(e);
+                    }
+                    for (PhotoEntity entity : photoEntities) {
+                        filteredPhotos.add(new Photo(entity.getId(), entity.getAuthor(), entity.getImageUrl()));
+                    }
+                    return new LoadResult.Page<>(filteredPhotos, null, null); // No pagination for search
+                }
+
                 List<Photo> photos;
                 try {
-                    photos = apiService.getPhotos(page, params.getLoadSize()).execute().body();
+                    photos = apiService.getPhotos(page, pageSize).execute().body();
                 } catch (IOException e) {
                     Log.e("PhotoPagingSource", "API fetch failed, loading from cache...");
-                    return loadFromCache();
+                    return loadFromCache(page, pageSize);
                 }
 
                 if (photos == null || photos.isEmpty()) {
-                    return loadFromCache();
+                    return loadFromCache(page, pageSize);
                 }
 
+                // **Save results to local database**
                 List<PhotoEntity> photoEntities = new ArrayList<>();
                 for (Photo photo : photos) {
                     photoEntities.add(new PhotoEntity(photo.getId(), photo.getAuthor(), photo.getImageUrl()));
@@ -61,24 +77,49 @@ public class PhotoPagingSource extends PagingSource<Integer, Photo> {
             });
 
             return future.get();
-        } catch (ExecutionException | InterruptedException e) {
+        } catch (Exception e) {
             Log.e("PhotoPagingSource", "Fetching from API failed. Loading from cache...");
-            return loadFromCache();
+            return loadFromCache(page, pageSize);
         }
     }
 
-    private LoadResult<Integer, Photo> loadFromCache() {
-        List<PhotoEntity> cachedPhotos = photoDao.getAllPhotos();
-        if (cachedPhotos.isEmpty()) {
-            return new LoadResult.Error<>(new IOException("No internet and no cached data"));
-        }
 
-        List<Photo> photos = new ArrayList<>();
-        for (PhotoEntity entity : cachedPhotos) {
-            photos.add(new Photo(entity.getId(), entity.getAuthor(), entity.getImageUrl()));
-        }
+    // **Updated `loadFromCache()` to support search functionality**
+    private LoadResult<Integer, Photo> loadFromCache(int page, int pageSize) {
+        try {
+            int offset = (page - 1) * pageSize;
+            List<PhotoEntity> cachedPhotos = photoDao.getPagedPhotos(pageSize, offset);
 
-        return new LoadResult.Page<>(photos, null, null);
+
+            if (cachedPhotos == null || cachedPhotos.isEmpty()) {
+                return new LoadResult.Error<>(new IOException("No internet and no cached data"));
+            }
+
+            List<Photo> photos = new ArrayList<>();
+            for (PhotoEntity entity : cachedPhotos) {
+                photos.add(new Photo(entity.getId(), entity.getAuthor(), entity.getImageUrl()));
+            }
+
+            // **Filter cached photos if search query exists**
+            if (searchQuery != null) {
+                List<Photo> filteredPhotos = new ArrayList<>();
+                for (Photo photo : photos) {
+                    if (photo.getAuthor().toLowerCase().contains(searchQuery) ||
+                            String.valueOf(photo.getId()).equals(searchQuery)) {
+                        filteredPhotos.add(photo);
+                    }
+                }
+                if (filteredPhotos.isEmpty()) {
+                    return new LoadResult.Error<>(new IOException("No matching results found in cache"));
+                }
+                photos = filteredPhotos;
+            }
+
+            return new LoadResult.Page<>(photos, null, null);
+        } catch (Exception e) {
+            Log.e("PhotoPagingSource", "Loading from cache Failed...");
+            throw e;
+        }
     }
 
     @NonNull

@@ -14,7 +14,6 @@ import com.vaishnavi.photoalbumapp.R;
 import com.vaishnavi.photoalbumapp.model.Photo;
 
 public class PhotoAdapter extends PagingDataAdapter<Photo, PhotoAdapter.PhotoViewHolder> {
-
     public PhotoAdapter() {
         super(DIFF_CALLBACK);
     }
@@ -42,22 +41,25 @@ public class PhotoAdapter extends PagingDataAdapter<Photo, PhotoAdapter.PhotoVie
     public void onBindViewHolder(@NonNull PhotoViewHolder holder, int position) {
         Photo photo = getItem(position);
         if (photo != null) {
+            holder.idTextView.setText(String.valueOf(photo.getId()));
             holder.textViewAuthor.setText(photo.getAuthor());
+
             Glide.with(holder.itemView.getContext())
                     .load(photo.getImageUrl())
-                    .placeholder(R.drawable.placeholder_foreground)
-                    .error(R.drawable.ic_launcher_foreground)
+                    .placeholder(R.drawable.placeholder_background)
+                    .error(R.drawable.placeholder_foreground)
                     .into(holder.imageView);
         }
     }
 
     public static class PhotoViewHolder extends RecyclerView.ViewHolder {
-        TextView textViewAuthor;
+        TextView textViewAuthor, idTextView;
         ImageView imageView;
 
         public PhotoViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewAuthor = itemView.findViewById(R.id.titleTextView);
+            idTextView = itemView.findViewById(R.id.idTextView);
             imageView = itemView.findViewById(R.id.imageView);
         }
     }
