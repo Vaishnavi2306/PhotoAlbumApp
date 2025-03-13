@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private List<String> searchSuggestions;
     private ArrayAdapter<String> autoCompleteAdapter;
     private String lastSearchQuery = ""; // Avoid redundant searches
+    private boolean isSearchActive = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         // Set up search features
         setupAutoCompleteSearch();
 
-        // ✅ Handle API errors and pagination failures
+        // Handle API errors and pagination failures
         setupLoadStateListener();
     }
 
@@ -114,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
                 autoCompleteAdapter.clear();
                 autoCompleteAdapter.addAll(filteredSuggestions);
                 autoCompleteAdapter.notifyDataSetChanged();
-                searchAutoComplete.showDropDown(); // Ensure dropdown is shown
+                searchAutoComplete.showDropDown();
             }
 
             @Override
@@ -124,36 +125,30 @@ public class MainActivity extends AppCompatActivity {
 
     private void performSearch(String query) {
         String formattedQuery = query.toLowerCase();
-
-        // Prevent redundant search requests
-        if (formattedQuery.equals(lastSearchQuery)) {
-            return;
-        }
-        lastSearchQuery = formattedQuery;
-
         photoViewModel.searchPhotos(formattedQuery).observe(this, pagingData -> {
             if (pagingData == null || pagingData.equals(PagingData.empty())) {
                 showError("No results found.");
             } else {
                 adapter.submitData(getLifecycle(), pagingData);
                 recyclerView.smoothScrollToPosition(0);
+                extractSearchSuggestions();  // 🔹 Fix: Update search suggestions after every search
             }
         });
     }
 
-    // ✅ Setup `LoadStateListener` to Handle Errors
+    //  Setup `LoadStateListener` to Handle Errors
     private void setupLoadStateListener() {
         adapter.addLoadStateListener(loadStates -> {
             LoadState refreshState = loadStates.getRefresh();
             LoadState appendState = loadStates.getAppend();
 
-            // ✅ Show error message if the first load fails
+            //  Show error message if the first load fails
             if (refreshState instanceof LoadState.Error) {
                 LoadState.Error errorState = (LoadState.Error) refreshState;
                 showError(errorState.getError().getMessage());
             }
 
-            // ✅ Show error message if loading next page fails
+            // Show error message if loading next page fails
             if (appendState instanceof LoadState.Error) {
                 LoadState.Error errorState = (LoadState.Error) appendState;
                 showError(errorState.getError().getMessage());
@@ -163,19 +158,26 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // ✅ Show errors in Snackbar
+
     private void showError(String message) {
-        Snackbar.make(findViewById(R.id.recyclerView), "Error: " + message, Snackbar.LENGTH_LONG).show();
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.recyclerView), message, Snackbar.LENGTH_INDEFINITE);
+        snackbar.setDuration(20000); // Setting duration to 20 seconds
+        snackbar.show();
     }
+
+
 
     @Override
     public void onBackPressed() {
-        if (!searchAutoComplete.getText().toString().isEmpty()) {
-            searchAutoComplete.setText("");
-            lastSearchQuery = "";
-            loadPhotos(); // Reload all images
+        // If search bar is not empty, clear it and reload all photos
+        if (!searchAutoComplete.getText().toString().isEmpty() || isSearchActive) {
+            searchAutoComplete.setText("");  // Clear search text
+            isSearchActive = false;  // Reset search state
+            loadPhotos();  // Reload all images from API or cache
         } else {
-            super.onBackPressed();
+            super.onBackPressed();  // Default back behavior (exit app)
         }
     }
+
+
 }

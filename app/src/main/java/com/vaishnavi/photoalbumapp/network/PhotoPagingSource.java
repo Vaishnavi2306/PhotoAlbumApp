@@ -37,7 +37,7 @@ public class PhotoPagingSource extends PagingSource<Integer, Photo> {
 
         try {
             Future<LoadResult<Integer, Photo>> future = Executors.newSingleThreadExecutor().submit(() -> {
-                // ✅ **If there's a search query, fetch from the database**
+                //  **If there's a search query, fetch from the database**
                 if (searchQuery != null && !searchQuery.isEmpty()) {
                     List<Photo> filteredPhotos = new ArrayList<>();
                     List<PhotoEntity> photoEntities;

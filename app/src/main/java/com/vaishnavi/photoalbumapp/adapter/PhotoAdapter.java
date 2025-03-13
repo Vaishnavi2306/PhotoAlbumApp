@@ -1,5 +1,6 @@
 package com.vaishnavi.photoalbumapp.adapter;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +13,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.vaishnavi.photoalbumapp.R;
 import com.vaishnavi.photoalbumapp.model.Photo;
+import com.vaishnavi.photoalbumapp.ui.FullImageActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PhotoAdapter extends PagingDataAdapter<Photo, PhotoAdapter.PhotoViewHolder> {
+    private final List<String> imageUrls = new ArrayList<>();
     public PhotoAdapter() {
         super(DIFF_CALLBACK);
     }
@@ -49,6 +55,14 @@ public class PhotoAdapter extends PagingDataAdapter<Photo, PhotoAdapter.PhotoVie
                     .placeholder(R.drawable.placeholder_background)
                     .error(R.drawable.placeholder_foreground)
                     .into(holder.imageView);
+
+            holder.imageView.setOnClickListener(v -> {
+                Intent intent = new Intent(holder.itemView.getContext(), FullImageActivity.class);
+                intent.putExtra("position", position);
+                holder.itemView.getContext().startActivity(intent);
+            });
+
+
         }
     }
 
