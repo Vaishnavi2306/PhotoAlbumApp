@@ -10,8 +10,12 @@ import androidx.paging.PagingData;
 import androidx.paging.PagingLiveData;
 import com.vaishnavi.photoalbumapp.database.PhotoDao;
 import com.vaishnavi.photoalbumapp.model.Photo;
+import com.vaishnavi.photoalbumapp.model.PhotoEntity;
 import com.vaishnavi.photoalbumapp.network.ApiService;
 import com.vaishnavi.photoalbumapp.network.PhotoPagingSource;
+
+import java.util.List;
+import java.util.concurrent.Executors;
 
 public class PhotoViewModel extends ViewModel {
     private final Application application;
@@ -22,6 +26,16 @@ public class PhotoViewModel extends ViewModel {
         this.application = application;
         this.apiService = apiService;
         this.photoDao = photoDao;
+    }
+
+    public LiveData<List<PhotoEntity>> getFavoritePhotos() {
+        return photoDao.getFavoritePhotos();
+    }
+
+    public void toggleFavorite(PhotoEntity photo) {
+        Executors.newSingleThreadExecutor().execute(() -> {
+            photoDao.updateFavoriteStatus(photo.getId(), !photo.isFavorite());
+        });
     }
 
     public  LiveData<PagingData<Photo>> getPhotos() {

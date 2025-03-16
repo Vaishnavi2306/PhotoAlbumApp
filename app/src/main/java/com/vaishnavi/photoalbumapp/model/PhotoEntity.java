@@ -11,11 +11,13 @@ public class PhotoEntity {
     private int id;
     private String author;
     private String imageUrl;
+    private boolean isFavorite;
 
-    public PhotoEntity(int id, String author, String imageUrl) {
+    public PhotoEntity(int id, String author, String imageUrl,boolean isFavorite) {
         this.id = id;
         this.author = author;
         this.imageUrl = imageUrl;
+        this.isFavorite = isFavorite;
     }
 
     public int getId() {
@@ -29,4 +31,9 @@ public class PhotoEntity {
     public String getImageUrl() {
         return imageUrl;
     }
+
+    public boolean isFavorite() { return isFavorite; }
+
+    public void setFavorite(boolean favorite) { this.isFavorite = favorite; }
+
 }

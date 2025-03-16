@@ -1,9 +1,12 @@
 package com.vaishnavi.photoalbumapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.paging.LoadState;
@@ -40,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new PhotoAdapter();
         recyclerView.setAdapter(adapter);
+
+
 
         searchAutoComplete = findViewById(R.id.searchAutoComplete);
 
@@ -157,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
             return null;
         });
     }
+
 
 
     private void showError(String message) {

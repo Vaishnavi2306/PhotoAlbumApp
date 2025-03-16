@@ -48,7 +48,7 @@ public class PhotoPagingSource extends PagingSource<Integer, Photo> {
                         return new LoadResult.Error<>(e);
                     }
                     for (PhotoEntity entity : photoEntities) {
-                        filteredPhotos.add(new Photo(entity.getId(), entity.getAuthor(), entity.getImageUrl()));
+                        filteredPhotos.add(new Photo(entity.getId(), entity.getAuthor(), entity.getImageUrl(), entity.isFavorite()));
                     }
                     return new LoadResult.Page<>(filteredPhotos, null, null); // No pagination for search
                 }
@@ -68,7 +68,7 @@ public class PhotoPagingSource extends PagingSource<Integer, Photo> {
                 // **Save results to local database**
                 List<PhotoEntity> photoEntities = new ArrayList<>();
                 for (Photo photo : photos) {
-                    photoEntities.add(new PhotoEntity(photo.getId(), photo.getAuthor(), photo.getImageUrl()));
+                    photoEntities.add(new PhotoEntity(photo.getId(), photo.getAuthor(), photo.getImageUrl(),photo.isFavorite()));
                 }
                 photoDao.insertAll(photoEntities);
 
@@ -97,7 +97,7 @@ public class PhotoPagingSource extends PagingSource<Integer, Photo> {
 
             List<Photo> photos = new ArrayList<>();
             for (PhotoEntity entity : cachedPhotos) {
-                photos.add(new Photo(entity.getId(), entity.getAuthor(), entity.getImageUrl()));
+                photos.add(new Photo(entity.getId(), entity.getAuthor(), entity.getImageUrl(),entity.isFavorite()));
             }
 
             // **Filter cached photos if search query exists**

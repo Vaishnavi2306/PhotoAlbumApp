@@ -1,5 +1,6 @@
 package com.vaishnavi.photoalbumapp.model;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Ignore;
 
 import com.google.gson.annotations.SerializedName;
@@ -14,10 +15,14 @@ public class Photo {
 
     private String author;
 
-    public Photo(int id, String author, String imageUrl) {
+    @ColumnInfo(name = "isFavorite")
+    private boolean isFavorite;
+
+    public Photo(int id, String author, String imageUrl, boolean isFavorite) {
         this.id = id;
         this.imageUrl = imageUrl;
         this.author = author;
+        this.isFavorite = isFavorite;
     }
 
     public int getId() {
@@ -30,6 +35,14 @@ public class Photo {
 
     public String getAuthor() {
         return author;
+    }
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.isFavorite = favorite;
     }
     @Override
     public boolean equals(Object obj) {

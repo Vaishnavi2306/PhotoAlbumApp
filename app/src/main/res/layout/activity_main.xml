@@ -1,19 +1,41 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="8dp">
 
+    <!-- Search Bar -->
     <AutoCompleteTextView
         android:id="@+id/searchAutoComplete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Search by ID or Author"
+        android:hint="@string/search_hint"
         android:inputType="text"
+        android:padding="5dp"
+        android:minHeight="40dp"
+        android:layout_margin="4dp"
         android:imeOptions="actionSearch"
         android:completionThreshold="1"/>
 
+    <!-- Save Button -->
+    <ImageView
+        android:id="@+id/btnSaveImage"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:src="@drawable/ic_save"
+        app:tint="@android:color/white"
+        android:clickable="true"
+        android:focusable="true"
+        android:contentDescription="@string/save_image_desc"
+        android:layout_gravity="center_horizontal"
+        android:padding="12dp"
+        android:layout_marginTop="16dp"/>
+
+    <!-- RecyclerView (For Displaying Images) -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 </LinearLayout>
