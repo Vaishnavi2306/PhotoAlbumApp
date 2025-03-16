@@ -18,19 +18,7 @@
         android:imeOptions="actionSearch"
         android:completionThreshold="1"/>
 
-    <!-- Save Button -->
-    <ImageView
-        android:id="@+id/btnSaveImage"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:src="@drawable/ic_save"
-        app:tint="@android:color/white"
-        android:clickable="true"
-        android:focusable="true"
-        android:contentDescription="@string/save_image_desc"
-        android:layout_gravity="center_horizontal"
-        android:padding="12dp"
-        android:layout_marginTop="16dp"/>
+
 
     <!-- RecyclerView (For Displaying Images) -->
     <androidx.recyclerview.widget.RecyclerView
