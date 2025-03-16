@@ -12,10 +12,11 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.vaishnavi.photoalbumapp.model.PhotoEntity;
 
-@Database(entities = {PhotoEntity.class}, version = 8, exportSchema = false)
+@Database(entities = {PhotoEntity.class}, version = 8, exportSchema = false) // Define the database schema
 public abstract class AppDatabase extends RoomDatabase {
     private static volatile AppDatabase instance;
 
+    // Abstract method for DAO
     public abstract PhotoDao photoDao();
 
     static final Migration MIGRATION_1_2 = new Migration(1, 2) {
@@ -32,6 +33,7 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
+    // Singleton pattern to get a single instance of the database
     public static AppDatabase getInstance(Context context) {
         if (instance == null) {
             synchronized (AppDatabase.class) {

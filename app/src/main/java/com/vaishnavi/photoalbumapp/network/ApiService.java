@@ -7,6 +7,6 @@ import retrofit2.http.Query;
 import com.vaishnavi.photoalbumapp.model.Photo;
 
 public interface ApiService {
-    @GET("v2/list")
+    @GET("v2/list")// API endpoint to fetch the photo list
     Call<List<Photo>> getPhotos(@Query("page") int page, @Query("limit") int limit);
 }

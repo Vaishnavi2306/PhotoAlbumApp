@@ -18,6 +18,8 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
     private Context context;
     private List<PhotoEntity> imageList;
 
+
+    // Constructor to initialize context and image list
     public ViewPagerAdapter(Context context, List<PhotoEntity> imageList) {
         this.context = context;
         this.imageList = imageList;
@@ -26,12 +28,14 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // Inflate layout for full-screen image item
         View view = LayoutInflater.from(context).inflate(R.layout.item_fullscreen_image, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        // Load image using Glide with placeholder and error handling
         Glide.with(context)
                 .load(imageList.get(position).getImageUrl())  // Load the image
                 .placeholder(R.drawable.placeholder_background)
@@ -44,12 +48,13 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
         return imageList.size();
     }
 
+    // ViewHolder to hold image reference
     public static class ViewHolder extends RecyclerView.ViewHolder {
         PhotoView imageView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            imageView = itemView.findViewById(R.id.fullImageView);
+            imageView = itemView.findViewById(R.id.fullImageView); // Reference to ImageView in layout
         }
     }
 }

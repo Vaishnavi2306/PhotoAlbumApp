@@ -15,6 +15,7 @@ public class PhotoRepository {
         this.photoDao = photoDao;
     }
 
+    // Retrieve paginated photos from the database
     public LiveData<PagingData<PhotoEntity>> getPhotos() {
         Pager<Integer, PhotoEntity> pager = new Pager<>(
                 new PagingConfig(20, 5, false),
@@ -23,6 +24,7 @@ public class PhotoRepository {
         return PagingLiveData.getLiveData(pager);
     }
 
+    // Retrieve paginated photos based on search query
     public LiveData<PagingData<PhotoEntity>> searchPhotos(String query) {
         Pager<Integer, PhotoEntity> pager = new Pager<>(
                 new PagingConfig(20),

@@ -22,22 +22,26 @@ public class PhotoViewModel extends ViewModel {
     private final ApiService apiService;
     private final PhotoDao photoDao;
 
+    // Constructor
     public PhotoViewModel(Application application, ApiService apiService, PhotoDao photoDao) {
         this.application = application;
         this.apiService = apiService;
         this.photoDao = photoDao;
     }
 
+    // LiveData to observe favorite photos
     public LiveData<List<PhotoEntity>> getFavoritePhotos() {
         return photoDao.getFavoritePhotos();
     }
 
+    // Toggle the favorite status of a photo
     public void toggleFavorite(PhotoEntity photo) {
         Executors.newSingleThreadExecutor().execute(() -> {
             photoDao.updateFavoriteStatus(photo.getId(), !photo.isFavorite());
         });
     }
 
+    // Retrieve paginated photo data from API or local database
     public  LiveData<PagingData<Photo>> getPhotos() {
         return Transformations.distinctUntilChanged(
                 PagingLiveData.getLiveData(
@@ -49,6 +53,7 @@ public class PhotoViewModel extends ViewModel {
         );
     }
 
+    // Retrieve paginated photo data based on search query
     public LiveData<PagingData<Photo>> searchPhotos(String query) {
         return PagingLiveData.getLiveData(
                 new Pager<>(

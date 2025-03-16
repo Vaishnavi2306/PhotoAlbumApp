@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         autoCompleteAdapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, searchSuggestions);
         searchAutoComplete.setAdapter(autoCompleteAdapter);
 
+        // Initialize API service and Room database
         ApiService apiService = RetrofitClient.getInstance(this).create(ApiService.class);
         AppDatabase database = AppDatabase.getInstance(this);
         photoViewModel = new ViewModelProvider(this,
@@ -69,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
         setupLoadStateListener();
     }
 
+    // Fetches photos from ViewModel and updates RecyclerView
     private void loadPhotos() {
         photoViewModel.getPhotos().observe(this, pagingData -> {
             if (pagingData == null || pagingData.equals(PagingData.empty())) {
@@ -80,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    // Extracts search suggestions from the currently loaded photos
     private void extractSearchSuggestions() {
         searchSuggestions.clear();
         for (Photo photo : adapter.snapshot().getItems()) {
@@ -89,12 +92,14 @@ public class MainActivity extends AppCompatActivity {
         autoCompleteAdapter.notifyDataSetChanged();
     }
 
+    // Setup AutoComplete search functionality
     private void setupAutoCompleteSearch() {
         searchAutoComplete.setOnItemClickListener((parent, view, position, id) -> {
             String query = (String) parent.getItemAtPosition(position);
             performSearch(query);
         });
 
+        // Show suggestions dynamically as user types
         searchAutoComplete.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 performSearch(v.getText().toString());
@@ -128,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    // Perform search using ViewModel
     private void performSearch(String query) {
         String formattedQuery = query.toLowerCase();
         photoViewModel.searchPhotos(formattedQuery).observe(this, pagingData -> {
@@ -136,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 adapter.submitData(getLifecycle(), pagingData);
                 recyclerView.smoothScrollToPosition(0);
-                extractSearchSuggestions();  // 🔹 Fix: Update search suggestions after every search
+                extractSearchSuggestions();
             }
         });
     }
@@ -164,12 +170,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
+    // Show error messages in a Snackbar
     private void showError(String message) {
         Snackbar snackbar = Snackbar.make(findViewById(R.id.recyclerView), message, Snackbar.LENGTH_INDEFINITE);
         snackbar.setDuration(20000); // Setting duration to 20 seconds
         snackbar.show();
     }
+
 
 
 

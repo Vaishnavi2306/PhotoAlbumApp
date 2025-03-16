@@ -14,7 +14,7 @@ import java.util.List;
 @Dao
 public interface PhotoDao {
 
-
+    // Insert multiple photos into the database, replacing any conflicts
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(List<PhotoEntity> photos);
 
@@ -22,12 +22,14 @@ public interface PhotoDao {
     @Query("SELECT * FROM photo_table ORDER BY id ASC")
     PagingSource<Integer, PhotoEntity> getAllPhotosPagingSource();
 
+    // Get all favorite photos (where isFavorite = 1), returning LiveData
     @Query("SELECT * FROM photo_table WHERE isFavorite = 1 ORDER BY id ASC")
     LiveData<List<PhotoEntity>> getFavoritePhotos();
 
     @Update
     void updatePhoto(PhotoEntity photo);
 
+    //  Update the favorite status of a photo by its ID
     @Query("UPDATE photo_table SET isFavorite = :isFavorite WHERE id = :photoId")
     void updateFavoriteStatus(int photoId, boolean isFavorite);
 
@@ -39,9 +41,11 @@ public interface PhotoDao {
     @Query("SELECT * FROM photo_table WHERE LOWER(author) LIKE '%' || LOWER(:searchQuery) || '%' OR CAST(id AS TEXT) LIKE :searchQuery || '%' ORDER BY id ASC")
     PagingSource<Integer, PhotoEntity> searchPhotosPagingSource(String searchQuery);
 
+    //  Search photos by author or ID prefix (returns a List instead of PagingSource)
     @Query("SELECT * FROM photo_table WHERE LOWER(author) LIKE '%' || LOWER(:searchQuery) || '%' OR CAST(id AS TEXT) LIKE :searchQuery || '%' ORDER BY id ASC")
     List<PhotoEntity> searchPhotos(String searchQuery);
 
+    //  Fetch paginated photos using LIMIT & OFFSET for correct page-based caching
     @Query("SELECT * FROM photo_table ORDER BY id ASC LIMIT :pageSize OFFSET :offset")
     List<PhotoEntity> getPagedPhotos(int pageSize, int offset);
 }

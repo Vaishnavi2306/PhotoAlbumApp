@@ -15,7 +15,7 @@ public class RetrofitClient {
     public static Retrofit getInstance(Context context) {
         if (retrofit == null) {
             File httpCacheDirectory = new File(context.getCacheDir(), "responses");
-            Cache cache = new Cache(httpCacheDirectory, 50 * 1024 * 1024); // 10MB cache
+            Cache cache = new Cache(httpCacheDirectory, 50 * 1024 * 1024); // 50MB cache
 
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
             logging.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -28,6 +28,7 @@ public class RetrofitClient {
                     .readTimeout(30, TimeUnit.SECONDS)
                     .build();
 
+            // Build the Retrofit instance
             retrofit = new Retrofit.Builder()
                     .baseUrl("https://picsum.photos/")
                     .client(okHttpClient)

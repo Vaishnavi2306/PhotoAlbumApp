@@ -40,14 +40,16 @@ public class FullImageActivity extends AppCompatActivity {
         btnFavorite = findViewById(R.id.btnFavorite);
         btnSave = findViewById(R.id.btnSave);
 
-        startPosition = getIntent().getIntExtra("position", 0);
+        startPosition = getIntent().getIntExtra("position", 0);// Retrieve clicked image position
 
-        // Load images from Room Database
+
+        // Load images from Room Database using a background thread
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         executorService.execute(() -> {
             AppDatabase db = AppDatabase.getInstance(this);
             imageList = db.photoDao().getAllPhotosFromDatabase();
 
+            // Update UI on the main thread after data is fetched
             runOnUiThread(() -> {
                 if (imageList != null && !imageList.isEmpty()) {
                     ViewPagerAdapter adapter = new ViewPagerAdapter(this, imageList);
@@ -71,6 +73,7 @@ public class FullImageActivity extends AppCompatActivity {
             PhotoEntity photo = imageList.get(position);
             photo.setFavorite(!photo.isFavorite());
 
+        // Update the database in a background thread
             ExecutorService executorService = Executors.newSingleThreadExecutor();
             executorService.execute(() -> {
                 AppDatabase.getInstance(this).photoDao().updatePhoto(photo);
@@ -90,6 +93,7 @@ public class FullImageActivity extends AppCompatActivity {
         }
     }
 
+    // Save the currently viewed image to the gallery
     private void saveImageToGallery() {
         int position = viewPager.getCurrentItem();
         if (imageList != null && position < imageList.size()) {
@@ -106,6 +110,7 @@ public class FullImageActivity extends AppCompatActivity {
         }
     }
 
+    // Save the image as a file in the device gallery
     private String saveBitmapToGallery(Bitmap bitmap) {
         OutputStream fos;
         String imageFileName = "Photo_" + System.currentTimeMillis() + ".jpg";
@@ -122,6 +127,7 @@ public class FullImageActivity extends AppCompatActivity {
             fos.flush();
             fos.close();
 
+            // Add image to the system media store
             ContentValues values = new ContentValues();
             values.put(MediaStore.Images.Media.DATA, imageFile.getAbsolutePath());
             values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");

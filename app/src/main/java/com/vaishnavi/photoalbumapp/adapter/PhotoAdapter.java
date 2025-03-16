@@ -67,10 +67,12 @@ public class PhotoAdapter extends PagingDataAdapter<Photo, PhotoAdapter.PhotoVie
 
     @Override
     public void onBindViewHolder(@NonNull PhotoViewHolder holder, int position) {
-        Photo photo = getItem(position);
+        Photo photo = getItem(position); //  Get the photo item at position
         if (photo != null) {
             holder.idTextView.setText(String.valueOf(photo.getId()));
             holder.textViewAuthor.setText(photo.getAuthor());
+
+            //  Load image using Glide with placeholder and error handling
 
             Glide.with(holder.itemView.getContext())
                     .load(photo.getImageUrl())
@@ -104,6 +106,7 @@ public class PhotoAdapter extends PagingDataAdapter<Photo, PhotoAdapter.PhotoVie
         }
     }
 
+    //  Update Favorite Button UI based on state
 
     private void updateFavoriteIcon(ImageView favoriteButton, boolean isFavorite) {
         if (isFavorite) {
@@ -122,6 +125,7 @@ public class PhotoAdapter extends PagingDataAdapter<Photo, PhotoAdapter.PhotoVie
         return snapshot().size();
     }
 
+    // ViewHolder for holding UI components of each item
 
     public static class PhotoViewHolder extends RecyclerView.ViewHolder {
         TextView textViewAuthor, idTextView;
@@ -137,6 +141,8 @@ public class PhotoAdapter extends PagingDataAdapter<Photo, PhotoAdapter.PhotoVie
         }
     }
 
+    //  Save Image to Gallery
+
     private void saveImageToGallery(String imageUrl, Context context) {
         Glide.with(context)
                 .asBitmap()
@@ -149,12 +155,14 @@ public class PhotoAdapter extends PagingDataAdapter<Photo, PhotoAdapter.PhotoVie
 
                     @Override
                     public void onLoadCleared(@Nullable Drawable placeholder) {
-                        // Do nothing
+
                     }
                 });
 
 
     }
+
+    //  Save Bitmap to Device Gallery
 
     private void saveBitmapToGallery(Bitmap bitmap, Context context) {
         OutputStream fos = null;

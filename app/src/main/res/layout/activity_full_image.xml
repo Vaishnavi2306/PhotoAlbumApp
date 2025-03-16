@@ -6,11 +6,13 @@
     android:background="#000000"
     android:orientation="vertical">
 
+    <!-- ViewPager2 for displaying full-screen images with swipe functionality -->
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <!-- Bottom control panel containing Favorite and Save buttons -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

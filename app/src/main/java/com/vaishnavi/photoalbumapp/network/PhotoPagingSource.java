@@ -53,6 +53,7 @@ public class PhotoPagingSource extends PagingSource<Integer, Photo> {
                     return new LoadResult.Page<>(filteredPhotos, null, null); // No pagination for search
                 }
 
+                // Fetch photos from API
                 List<Photo> photos;
                 try {
                     photos = apiService.getPhotos(page, pageSize).execute().body();
@@ -65,7 +66,7 @@ public class PhotoPagingSource extends PagingSource<Integer, Photo> {
                     return loadFromCache(page, pageSize);
                 }
 
-                // **Save results to local database**
+                 // Save API results to the database
                 List<PhotoEntity> photoEntities = new ArrayList<>();
                 for (Photo photo : photos) {
                     photoEntities.add(new PhotoEntity(photo.getId(), photo.getAuthor(), photo.getImageUrl(),photo.isFavorite()));
@@ -84,7 +85,7 @@ public class PhotoPagingSource extends PagingSource<Integer, Photo> {
     }
 
 
-    // **Updated `loadFromCache()` to support search functionality**
+    // Load paginated data from the database if the API call fails
     private LoadResult<Integer, Photo> loadFromCache(int page, int pageSize) {
         try {
             int offset = (page - 1) * pageSize;
