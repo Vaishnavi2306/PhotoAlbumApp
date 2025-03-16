@@ -21,6 +21,13 @@ The Photo Album App is an Android application that allows users to browse and vi
 
 •	Displays placeholder images for missing or failed loads
 
+•   Users can toggle favorite status for images
+
+•   Saves images directly to the gallery in full resolution
+
+
+
+    
 **How the App Works**
 
 Home Screen
@@ -40,6 +47,15 @@ Full-Screen Image Preview
 •	Supports pinch-to-zoom and panning
 
 •	Swipe left or right to view next and previous images
+
+Favorite & Save Images
+•    Users can mark/unmark images as favorites
+
+•    Click Save Image to store images in the gallery
+
+•    Improved full-resolution image saving
+
+•    Fixed previous issues where only part of the image was saved
 
 Offline Support
 
