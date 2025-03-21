@@ -25,6 +25,9 @@ The Photo Album App is an Android application that allows users to browse and vi
 
 •   Saves images directly to the gallery in full resolution
 
+• Automatically generates captions for images using Microsoft Azure Computer Vision API
+
+
 
 
     
@@ -49,6 +52,7 @@ Full-Screen Image Preview
 •	Swipe left or right to view next and previous images
 
 Favorite & Save Images
+
 •    Users can mark/unmark images as favorites
 
 •    Click Save Image to store images in the gallery
@@ -62,6 +66,14 @@ Offline Support
 •	If there is no internet connection, images are loaded from the local Room database
 
 •	Ensures a smooth user experience even in offline mode
+
+Auto Image Captioning
+
+• Captions are generated for each image using Microsoft Azure's Computer Vision API 
+
+• Captions appear below each image once AI-based analysis completes  
+
+• The caption describes the content of the image based on machine learning algorithms
 
 Error Handling
 
