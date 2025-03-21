@@ -1,6 +1,7 @@
 package com.vaishnavi.photoalbumapp.model;
 
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -11,7 +12,9 @@ public class PhotoEntity {
     private int id;
     private String author;
     private String imageUrl;
+    @ColumnInfo(name = "is_favorite")
     private boolean isFavorite;//  Stores favorite status in the database
+
 
     // Constructor
     public PhotoEntity(int id, String author, String imageUrl,boolean isFavorite) {

@@ -29,6 +29,7 @@ import com.vaishnavi.photoalbumapp.R;
 import com.vaishnavi.photoalbumapp.model.Photo;
 
 import com.vaishnavi.photoalbumapp.ui.FullImageActivity;
+import com.vaishnavi.photoalbumapp.utils.ImageCaptionGenerator;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -80,6 +81,17 @@ public class PhotoAdapter extends PagingDataAdapter<Photo, PhotoAdapter.PhotoVie
                     .error(R.drawable.placeholder_foreground)
                     .into(holder.imageView);
 
+            // Initially hide caption text
+            holder.captionTextView.setVisibility(View.GONE);
+            holder.captionTextView.setText("Generating caption...");
+
+            // Generate caption asynchronously
+            ImageCaptionGenerator.generateCaption(photo.getImageUrl(), caption -> {
+                holder.captionTextView.setText(caption);
+                holder.captionTextView.setVisibility(View.VISIBLE);
+            });
+
+
             // Handle image click event to open full image view
 
             holder.imageView.setOnClickListener(v -> {
@@ -103,6 +115,8 @@ public class PhotoAdapter extends PagingDataAdapter<Photo, PhotoAdapter.PhotoVie
             holder.saveButton.setOnClickListener(v -> {
                 saveImageToGallery(photo.getImageUrl(), holder.itemView.getContext());
             });
+
+
         }
     }
 
@@ -128,13 +142,14 @@ public class PhotoAdapter extends PagingDataAdapter<Photo, PhotoAdapter.PhotoVie
     // ViewHolder for holding UI components of each item
 
     public static class PhotoViewHolder extends RecyclerView.ViewHolder {
-        TextView textViewAuthor, idTextView;
+        TextView textViewAuthor, idTextView,captionTextView;
         ImageView imageView,favoriteButton, saveButton;
 
         public PhotoViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewAuthor = itemView.findViewById(R.id.titleTextView);
             idTextView = itemView.findViewById(R.id.idTextView);
+            captionTextView = itemView.findViewById(R.id.captionTextView);
             imageView = itemView.findViewById(R.id.imageView);
             favoriteButton = itemView.findViewById(R.id.favoriteButton);
             saveButton = itemView.findViewById(R.id.btnSaveImage);

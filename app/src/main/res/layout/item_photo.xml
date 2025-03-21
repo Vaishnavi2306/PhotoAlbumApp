@@ -13,7 +13,20 @@
         android:contentDescription="@string/photo_image"
         android:layout_marginBottom="8dp" />
 
-    <!-- Horizontal Layout for ID, Name, and Buttons -->
+    <!-- Caption TextView (Ensuring it's present) -->
+    <TextView
+        android:id="@+id/captionTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Generating caption..."
+        android:textSize="14sp"
+        android:textStyle="italic"
+        android:textColor="#666"
+        android:gravity="center"
+        android:padding="4dp"
+        android:visibility="gone"/>
+
+    <!-- Horizontal Layout for ID, Title, and Buttons -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,50 +34,40 @@
         android:gravity="center_vertical"
         android:padding="4dp">
 
-        <!-- ID  -->
+        <!-- ID TextView (Fixing ID reference) -->
         <TextView
             android:id="@+id/idTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:paddingEnd="8dp"
-            android:text="123" />
-
-        <!-- Author Name -->
-        <TextView
-            android:id="@+id/titleTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textStyle="bold"
-            android:textColor="@android:color/darker_gray"
+            android:text="ID: 123"
             android:textSize="14sp"
-            android:text="John Doe" />
-
-        <!-- Favorite Button (Toggle) -->
-        <ImageView
-            android:id="@+id/favoriteButton"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:src="@drawable/baseline_favorite_border_24"
-            android:contentDescription="@string/favorite_button_desc"
-            android:clickable="true"
-            android:focusable="true"
-            android:padding="6dp"
             android:layout_marginEnd="8dp"/>
 
-        <!-- Save Button -->
+        <!-- Title TextView -->
+        <TextView
+            android:id="@+id/titleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Photo Title"
+            android:textSize="14sp"
+            android:layout_weight="1"/>
+
+        <!-- Favorite Button -->
+        <ImageView
+            android:id="@+id/favoriteButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/baseline_favorite_border_24"
+            android:contentDescription="@string/favorite_button_desc"
+            android:padding="4dp"/>
+
+        <!-- Save Image Button -->
         <ImageView
             android:id="@+id/btnSaveImage"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:src="@drawable/ic_save"
             android:contentDescription="@string/save_button_desc"
-            android:clickable="true"
-            android:focusable="true"
-            android:padding="6dp"/>
+            android:padding="4dp"/>
     </LinearLayout>
-
 </LinearLayout>
